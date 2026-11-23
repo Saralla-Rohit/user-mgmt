@@ -1,11 +1,10 @@
 package com.phegondev.usersmanagementsystem.service;
 
-import com.phegondev.usersmanagementsystem.config.JWTAuthFilter;
 import com.phegondev.usersmanagementsystem.dto.ReqRes;
 import com.phegondev.usersmanagementsystem.entity.OurUsers;
 import com.phegondev.usersmanagementsystem.repository.UsersRepo;
-import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,6 +27,9 @@ public class UsersManagementService {
     private PasswordEncoder passwordEncoder;
 
 
+    @Value("${jwt.access-token-expiration}")
+    private long accessTokenExpirationMs;
+    
     public ReqRes register(ReqRes registrationRequest){
         ReqRes resp = new ReqRes();
 
@@ -66,7 +68,7 @@ public class UsersManagementService {
             response.setToken(jwt);
             response.setRole(user.getRole());
             response.setRefreshToken(refreshToken);
-            response.setExpirationTime("15min");
+            response.setExpirationTime(accessTokenExpirationMs / 1000 / 60 + "min");
             response.setMessage("Successfully Logged In");
 
         }catch (Exception e){
@@ -90,7 +92,7 @@ public class UsersManagementService {
                 response.setStatusCode(200);
                 response.setToken(jwt);
                 response.setRefreshToken(refreshTokenReqiest.getToken());
-                response.setExpirationTime("15min");
+                response.setExpirationTime(accessTokenExpirationMs / 1000 / 60 + "min");
                 response.setMessage("Successfully Refreshed Token");
             }
             response.setStatusCode(200);

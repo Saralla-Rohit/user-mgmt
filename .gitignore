@@ -7,7 +7,7 @@ frontend/.env.*
 # Backend
 backend/target/
 backend/bin/
-backend/src/main/resources/application.properties
+backend/src/main/resources/
 
 # IDE
 .idea/

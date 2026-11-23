@@ -25,12 +25,13 @@ public class JWTUtils {
      */
     private SecretKey key;
 
-    // Access token: 15 minutes
-    protected static final long ACCESS_TOKEN_EXPIRATION = 1000 * 60 * 15;
+    @Value("${jwt.access-token-expiration}")
+    private long accessTokenExpiration;
 
-    // Refresh token: 7 days
-    private static final long REFRESH_TOKEN_EXPIRATION = 1000 * 60 * 60 * 24  * 7;
-
+    @Value("${jwt.refresh-token-expiration}")
+    private long refreshTokenExpiration;
+    
+    
 //    @Value("${jwt.secret}")
 //    private String secretString;
 
@@ -45,7 +46,7 @@ public class JWTUtils {
         return Jwts.builder()
                 .subject(userDetails.getUsername())
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION))
+                .expiration(new Date(System.currentTimeMillis() + accessTokenExpiration))
                 .signWith(key)
                 .compact();
     }
@@ -59,7 +60,7 @@ public class JWTUtils {
                 .claims(claims)
                 .subject(userDetails.getUsername())
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION))
+                .expiration(new Date(System.currentTimeMillis() + refreshTokenExpiration))
                 .signWith(key)
                 .compact();
     }
